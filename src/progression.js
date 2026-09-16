@@ -2,6 +2,7 @@ const apprenants = require("./data.js"); //to import the array from data file
 const prompt = require('prompt-sync')(); //to enable input from the user
 function ajouterApprenant(){
     //develop the UI in console!
+    //new bug, null can be added(if u ctrl + c in input or press enter)
     let newApparenant = {} ;
     //maybe we can make a better id system.
     newApparenant.id = apprenants.length + 1;
@@ -68,25 +69,33 @@ function enregistrerResultat(){
         return 0;
     }
     //data treatement to output.
-    const index = apprenants.findIndex(apprenant => apprenant.id)
+    
+    const index = apprenants.findIndex(apprenant => apprenant.id == idChercher)
     apprenants[index].resultats.push({
         jour: jour, exercicesTermines: exercices, 
         totalExercices: totalProposer, challengeTermine: challenge
     })
+    console.log(`Résultat du jour ${jour} enregistré.`);
+    //adding calculerProgression simplified this function way better.
+    calculerProgression(idChercher);
+}
+function calculerProgression(id){
+    //get the index in the array of the desired id
+    const index = apprenants.findIndex(apprenant => apprenant.id == id)
     let totalTerminer = 0;
     let totalExercices = 0;
     let challengeTerminer = 0;
+    //countaing all totals
     for(let i = 0; i<apprenants[index].resultats.length; i++){
         totalTerminer += apprenants[index].resultats[i].exercicesTermines;
         totalExercices += apprenants[index].resultats[i].totalExercices;
-        if(apprenants[index].resultats[i].challengeTermine){
+        if(apprenants[index].resultats[i].challengeTermine){ 
             challengeTerminer++;
-        }
+        } 
     }
     let progression = (totalTerminer/totalExercices)*100;
-    //last output.
-    console.log(`Résultat du jour ${jour} enregistré.`);
-    console.log(`Sara Dev : ${totalTerminer} / ${totalExercices} exercices, progression ${progression} %.`);
+    //output
+    console.log(`${apprenants[index].nomComplet} : ${totalTerminer} / ${totalExercices} exercices, progression ${progression} %.`);
     console.log(`${apprenants[index].resultats.length} journées renseignées, ${challengeTerminer} challenges terminés. `);
 }
-enregistrerResultat();
+enregistrerResultat()
