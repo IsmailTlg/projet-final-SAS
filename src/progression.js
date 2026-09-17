@@ -176,3 +176,35 @@ function filtrerParNiveau(){
     }
     return arr;
 }
+function trierParProgression(){
+    let obj = {}
+    //this puts each id with its progression in an object
+    for(let i = 0; i<apprenants.length; i++){
+        obj[apprenants[i].id] = calculerProgression(apprenants[i].id);
+        obj[apprenants[i].id] = obj[apprenants[i].id][0]
+    }
+    let entries = Object.entries(obj);
+    //sorting the ids and their progression by bubble sort
+    for(let i = 0; i<entries.length; i++){
+        let swapped = false;
+        for(let j = 0; j<entries.length - i - 1; j++){
+            if(entries[j][1] > entries[j+1][1]){
+                [entries[j], entries[j+1]] = [entries[j+1], entries[j]];
+                swapped = true;
+            }
+        }
+        if(swapped === false){
+            break;
+        }
+    }
+    console.log(entries)
+    let sorted = [];
+    for(let i = 0; i<entries.length; i++){
+        let index = apprenants.findIndex(apprenant => apprenant.id == entries[i][0])
+        console.log(index)
+        sorted.push([apprenants[index], `le progression: ${entries[i][1]}`]);        
+    }
+    console.log(sorted)
+}
+
+trierParProgression()
