@@ -35,7 +35,25 @@ function enregistrerResultat(){
     }
     //i could try to simplify this part
     if(isfound){
-        jour = prompt("jour (1 à 7): ");
+        //validerResultat really simplified this part of code, can i make it work with challenges too ?
+        jour = validerResultat("jour (1 à 7): ", 1, 7);
+        totalProposer = validerResultat("Total d'exercices proposés :", 0, 20);
+        exercices = validerResultat("Exercices terminés :", 0, totalProposer);
+        if(exercices >= 0 && exercices <= totalProposer){
+            challenge = prompt("Challenge termine (oui/non): ");
+            if(challenge == "oui"){
+                challenge = true;
+            }
+            else if(challenge == "non"){
+                challenge = false;
+            }
+            //maybe i can make a loop if the input was false?
+            else{
+                console.log("reponse doit etre oui ou non!");
+                return 0;
+            }
+        }
+        /*jour = prompt("jour (1 à 7): ");
         if(jour >= 1 && jour <= 7){
             exercices = prompt("Exercices terminés :");
             exercices = Number(exercices);
@@ -64,7 +82,8 @@ function enregistrerResultat(){
             console.log("jour doit etre compris entre 1 et 7");
             return 0;
         }
-    }
+    }*/
+
     //could make a loop here too to enter a new learner's id
     else {
         console.log("Apprenant pas trouve.");
@@ -80,6 +99,7 @@ function enregistrerResultat(){
     console.log(`Résultat du jour ${jour} enregistré.`);
     //adding calculerProgression simplified this function way better.
     calculerProgression(idChercher);
+    }
 }
 function calculerProgression(id){
     //get the index in the array of the desired id
@@ -106,4 +126,13 @@ function normaliserNom(nom){
     //this regex replaces multiple spaces with one.
     nom = nom.replace(/\s+/g, " ");
     return nom;
+}
+function validerResultat(question, min, max){
+    let valeur = prompt(question);
+    while(valeur < min || valeur > max){
+        console.log(`valeur invalide!, (entre ${min} et ${max})`);
+        valeur = prompt(question);
+    }
+    valeur = Number(valeur);
+    return valeur;
 }
