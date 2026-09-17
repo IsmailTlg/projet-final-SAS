@@ -52,15 +52,19 @@ function enregistrerResultat(){
     })
     console.log(`Résultat du jour ${jour} enregistré.`);
     //adding calculerProgression simplified this function way better.
-    calculerProgression(idChercher);
+    let prog = calculerProgression(idChercher);
+    console.log(`${apprenants[index].nomComplet} : ${prog[2]} / ${prog[1]} exercices, progression ${prog[0]} %.`);
+    console.log(`${apprenants[index].resultats.length} journées renseignées, ${prog[3]} challenges terminés. `);
     }
 }
+//returns a table [progress, total exercices, total finished, challenges finished]
 function calculerProgression(id){
     //get the index in the array of the desired id
     const index = apprenants.findIndex(apprenant => apprenant.id == id)
     let totalTerminer = 0;
     let totalExercices = 0;
     let challengeTerminer = 0;
+    let prog = [];
     //countaing all totals
     for(let i = 0; i<apprenants[index].resultats.length; i++){
         totalTerminer += apprenants[index].resultats[i].exercicesTermines;
@@ -71,8 +75,9 @@ function calculerProgression(id){
     }
     let progression = (totalTerminer/totalExercices)*100;
     //output
-    console.log(`${apprenants[index].nomComplet} : ${totalTerminer} / ${totalExercices} exercices, progression ${progression} %.`);
-    console.log(`${apprenants[index].resultats.length} journées renseignées, ${challengeTerminer} challenges terminés. `);
+    prog = [progression, totalExercices, totalTerminer, challengeTerminer];
+    //returning a whole array is way better so we can take whatever we need.
+    return prog;
 }
 function normaliserNom(nom){
     nom = nom.trim();
@@ -81,9 +86,11 @@ function normaliserNom(nom){
     nom = nom.replace(/\s+/g, " ");
     return nom;
 }
+//MUST FIX THE ENTRY HAS TO BE NUMBER IN CHOIX = FALSE!!!!!!!!
 function validerResultat(question, min = 1, max = 1, choix = false){
     let valeur = prompt(question);
     if(choix){
+        valeur = valeur.toLowerCase();
         while(valeur != "oui" && valeur != "non"){
             console.log("repondre par oui ou non");
             valeur = prompt(question);
@@ -106,6 +113,7 @@ function rechercherApprenant(cherche){
         for(let i = 0; i<apprenants.length; i++){
             if(cherche == apprenants[i].id){
                 isfound = true;
+                //bug here, when i add result for a new added person the name appears undefined after search!
                 console.log(`Apprenant trouve: ${apprenants[i].nomComplet}`);
                 return true;
                 break;
@@ -132,4 +140,39 @@ function rechercherApprenant(cherche){
             return false;
         }
     }
+}
+function filtrerParNiveau(){
+    //should try to make the output look better
+    let niveau = prompt("entrez niveau: ");
+    let valeur;
+    let arr = [];
+    niveau = normaliserNom(niveau);
+    if(niveau == "solide"){
+        for(let i = 0; i<apprenants.length; i++){
+            valeur = calculerProgression(apprenants[i].id);
+            if(valeur[0] >= 80){
+                arr.push(apprenants[i]);
+            }
+        }
+    }
+    else if(niveau == "en progression"){
+        for(let i = 0; i<apprenants.length; i++){
+            valeur = calculerProgression(apprenants[i].id);
+            if(valeur[0] >= 50 && valeur[0] < 80){
+                arr.push(apprenants[i]);
+            }
+        }
+    }
+    else if(niveau == "a renforcer"){
+        for(let i = 0; i<apprenants.length; i++){
+            valeur = calculerProgression(apprenants[i].id);
+            if(valeur[0] < 50){
+                arr.push(apprenants[i]);
+            }
+        }
+    }
+    else{
+        console.log("niveau invalide! (solide, en progression, a renforcer");
+    }
+    return arr;
 }
