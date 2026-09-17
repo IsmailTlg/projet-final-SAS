@@ -141,9 +141,9 @@ function rechercherApprenant(cherche){
         }
     }
 }
-function filtrerParNiveau(){
+function filtrerParNiveau(niveau){
     //should try to make the output look better
-    let niveau = prompt("entrez niveau: ");
+    //let niveau = prompt("entrez niveau: ");
     let valeur;
     let arr = [];
     niveau = normaliserNom(niveau);
@@ -197,14 +197,59 @@ function trierParProgression(){
             break;
         }
     }
-    console.log(entries)
     let sorted = [];
     for(let i = 0; i<entries.length; i++){
         let index = apprenants.findIndex(apprenant => apprenant.id == entries[i][0])
-        console.log(index)
         sorted.push([apprenants[index], `le progression: ${entries[i][1]}`]);        
     }
-    console.log(sorted)
+    return sorted;
 }
-
-trierParProgression()
+function afficherTableauDeBord(){
+    //calculation de progression moyenne
+    let progressionMoyenne = 0;
+    let a;
+    for(let i = 0; i<apprenants.length; i++){
+        progressionMoyenne += calculerProgression(apprenants[i].id)[0]
+    }
+    progressionMoyenne /= apprenants.length
+    let nbrSolides = filtrerParNiveau("solide").length
+    let nbrEnProg = filtrerParNiveau("en progression").length
+    let nbrRenfroc = filtrerParNiveau("a renforcer").length
+    console.log("====================TABLEAU DE BORD====================");
+    console.log(`Apprenants: ${apprenants.length}`);
+    console.log(`Progression Moyenne: ${progressionMoyenne}`);
+    console.log("---------------------LES NIVEAU------------------------")
+    console.log(`Apprenants Solide: ${nbrSolides}`);
+    console.log(`Apprenants en progression: ${nbrEnProg}`);
+    console.log(`Apprenants a renforcer: ${nbrRenfroc}`);
+    console.log("--------------------PROGRESSION--------------------");
+    let sorted = trierParProgression();
+    for(let i = 0; i<sorted.length; i++){
+        console.log(`${i+1}. ${sorted[i][0].nomComplet}      : ${sorted[i][1]}`)
+    }
+    console.log("---------------Données manquantes---------------");
+    for(let i = 0; i<apprenants.length; i++){
+        let jourExist = [];
+        let challengeExist = [];
+        let challengeManq = [1, 2, 3, 4, 5, 6, 7];
+        let jourManq = [1, 2, 3, 4, 5, 6, 7];
+        for(let k =0; k<apprenants[i].resultats.length; k++){
+            if(apprenants[i].resultats[k].challengeTermine){
+                challengeExist.push(apprenants[i].resultats[k].jour);
+            }
+        }
+        for(let j = 0; j<7; j++){
+            if(apprenants[i].resultats[j]){
+                jourExist.push(apprenants[i].resultats[j].jour)
+            }
+        }
+        challengeManq = challengeManq.filter(x => !challengeExist.includes(x));
+        jourManq = jourManq.filter(x => !jourExist.includes(x));
+        jourManq = jourManq.join(", ")
+        challengeManq = challengeManq.join(", ")
+        console.log(`${apprenants[i].nomComplet} :`);
+        console.log(`\t jours manquants: ${jourManq}`);
+        console.log(`\t challenges manquants: ${challengeManq}`);
+    }
+}   
+afficherTableauDeBord();
