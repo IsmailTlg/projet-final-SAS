@@ -40,25 +40,14 @@ function enregistrerResultat(){
         totalProposer = validerResultat("Total d'exercices proposés :", 0, 20);
         exercices = validerResultat("Exercices terminés :", 0, totalProposer);
         //could work on challenge here to make a loop
-        if(exercices >= 0 && exercices <= totalProposer){
-            challenge = prompt("Challenge termine (oui/non): ");
-            if(challenge == "oui"){
+        challenge = validerResultat("Challenge terminé (oui/non) :", 1, 1, true);
+        if(challenge == "oui"){
                 challenge = true;
             }
-            else if(challenge == "non"){
+        else if(challenge == "non"){
                 challenge = false;
-            }
-            //maybe i can make a loop if the input was false?
-            else{
-                console.log("reponse doit etre oui ou non!");
-                return 0;
-            }
         }
     //could make a loop here too to enter a new learner's id
-    else {
-        console.log("Apprenant pas trouve.");
-        return 0;
-    }
     //data treatement to output.
     
     const index = apprenants.findIndex(apprenant => apprenant.id == idChercher)
@@ -69,6 +58,10 @@ function enregistrerResultat(){
     console.log(`Résultat du jour ${jour} enregistré.`);
     //adding calculerProgression simplified this function way better.
     calculerProgression(idChercher);
+    }
+    else {
+        console.log("Apprenant pas trouve.");
+        return 0;
     }
 }
 function calculerProgression(id){
@@ -97,8 +90,15 @@ function normaliserNom(nom){
     nom = nom.replace(/\s+/g, " ");
     return nom;
 }
-function validerResultat(question, min, max){
+function validerResultat(question, min = 1, max = 1, choix = false){
     let valeur = prompt(question);
+    if(choix){
+        while(valeur != "oui" && valeur != "non"){
+            console.log("repondre par oui ou non");
+            valeur = prompt(question);
+        }
+        return valeur;
+    }
     while(valeur < min || valeur > max){
         console.log(`valeur invalide!, (entre ${min} et ${max})`);
         valeur = prompt(question);
