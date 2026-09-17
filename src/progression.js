@@ -26,13 +26,8 @@ function enregistrerResultat(){
     let challenge; 
     let jour;
     //searching if the learner exists
-    for(let i = 0; i<apprenants.length; i++){
-        if(idChercher == apprenants[i].id){
-            isfound = true;
-            console.log(`Apprenant trouve: ${apprenants[i].nomComplet}`);
-            break;
-        }
-    }
+    //rechercher Apprenant returns a boolean value
+    isfound = rechercherApprenant(idChercher);
     //i could try to simplify this part
     if(isfound){
         //validerResultat really simplified this part of code, can i make it work with challenges too ?
@@ -58,10 +53,6 @@ function enregistrerResultat(){
     console.log(`Résultat du jour ${jour} enregistré.`);
     //adding calculerProgression simplified this function way better.
     calculerProgression(idChercher);
-    }
-    else {
-        console.log("Apprenant pas trouve.");
-        return 0;
     }
 }
 function calculerProgression(id){
@@ -106,4 +97,39 @@ function validerResultat(question, min = 1, max = 1, choix = false){
     valeur = Number(valeur);
     return valeur;
 }
-enregistrerResultat()
+function rechercherApprenant(cherche){
+    // i could try to make a loop?
+    let test = Number(cherche)
+    let isfound;
+    //case cherche is a number(id);
+    if(!Number.isNaN(test)){
+        for(let i = 0; i<apprenants.length; i++){
+            if(cherche == apprenants[i].id){
+                isfound = true;
+                console.log(`Apprenant trouve: ${apprenants[i].nomComplet}`);
+                return true;
+                break;
+            }
+        }
+        if(!isfound){
+            console.log("apprenant pas trouve");
+            return false;
+        }
+    }
+    //case cherche is a string(name)
+    else{
+        cherche = normaliserNom(cherche)
+        for(let i = 0; i<apprenants.length; i++){
+            apprenants[i].nomComplet = normaliserNom(apprenants[i].nomComplet)
+            if(apprenants[i].nomComplet.includes(cherche)){
+                console.log(`apprenant trouve: ${apprenants[i].nomComplet}`);
+                isfound = true;
+                return true;
+            }
+        }
+        if(!isfound){
+            console.log("apprenant pas trouve.");
+            return false;
+        }
+    }
+}
