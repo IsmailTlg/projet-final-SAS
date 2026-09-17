@@ -7,6 +7,8 @@ function ajouterApprenant(){
     //maybe we can make a better id system.
     newApparenant.id = apprenants.length + 1;
     newApparenant.nomComplete = prompt("Entrez nom complet de l'apprenant: ");
+    newApparenant.nomComplete = normaliserNom(newApparenant.nomComplete);
+    //do i have to use normaliserNom on the city too ? 
     newApparenant.ville = prompt("Entrez la ville de l'apprenant: ");
     //do i have to leave the resultats empty?
     newApparenant.resultats = [];
@@ -98,4 +100,10 @@ function calculerProgression(id){
     console.log(`${apprenants[index].nomComplet} : ${totalTerminer} / ${totalExercices} exercices, progression ${progression} %.`);
     console.log(`${apprenants[index].resultats.length} journées renseignées, ${challengeTerminer} challenges terminés. `);
 }
-enregistrerResultat()
+function normaliserNom(nom){
+    nom = nom.trim();
+    nom = nom.toLowerCase();
+    //this regex replaces multiple spaces with one.
+    nom = nom.replace(/\s+/g, " ");
+    return nom;
+}
