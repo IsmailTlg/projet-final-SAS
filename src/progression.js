@@ -39,6 +39,7 @@ function enregistrerResultat(){
         jour = validerResultat("jour (1 à 7): ", 1, 7);
         totalProposer = validerResultat("Total d'exercices proposés :", 0, 20);
         exercices = validerResultat("Exercices terminés :", 0, totalProposer);
+        //could work on challenge here to make a loop
         if(exercices >= 0 && exercices <= totalProposer){
             challenge = prompt("Challenge termine (oui/non): ");
             if(challenge == "oui"){
@@ -53,37 +54,6 @@ function enregistrerResultat(){
                 return 0;
             }
         }
-        /*jour = prompt("jour (1 à 7): ");
-        if(jour >= 1 && jour <= 7){
-            exercices = prompt("Exercices terminés :");
-            exercices = Number(exercices);
-            totalProposer = prompt("Total d'exercices proposés :");
-            totalProposer = Number(totalProposer);
-            if(exercices >= 0 && exercices <= totalProposer){
-                challenge = prompt("Challenge termine (oui/non): ");
-                if(challenge == "oui"){
-                    challenge = true;
-                }
-                else if(challenge == "non"){
-                    challenge = false;
-                }
-                //maybe i can make a loop if the input was false?
-                else{
-                    console.log("reponse doit etre oui ou non!");
-                    return 0;
-                }
-            }
-            else{
-                console.log("numero d'exercices doit etre positive, est depasse pas exercices propose!")
-                return 0;
-            }
-        }
-        else{
-            console.log("jour doit etre compris entre 1 et 7");
-            return 0;
-        }
-    }*/
-
     //could make a loop here too to enter a new learner's id
     else {
         console.log("Apprenant pas trouve.");
@@ -136,3 +106,4 @@ function validerResultat(question, min, max){
     valeur = Number(valeur);
     return valeur;
 }
+enregistrerResultat()
