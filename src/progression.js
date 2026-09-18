@@ -115,8 +115,8 @@ function rechercherApprenant(cherche){
                 isfound = true;
                 //bug here, when i add result for a new added person the name appears undefined after search!
                 console.log(`Apprenant trouve: ${apprenants[i].nomComplet}`);
-                return true;
-                break;
+                const index = apprenants.findIndex(apprenant => apprenant.id == cherche)
+                return index;
             }
         }
         if(!isfound){
@@ -132,7 +132,9 @@ function rechercherApprenant(cherche){
             if(apprenants[i].nomComplet.includes(cherche)){
                 console.log(`apprenant trouve: ${apprenants[i].nomComplet}`);
                 isfound = true;
-                return true;
+                //i can make it return the id's index, which would be a truthy value as well
+                const index = apprenants.findIndex(apprenant => apprenant.id == cherche)
+                return index;
             }
         }
         if(!isfound){
@@ -252,4 +254,43 @@ function afficherTableauDeBord(){
         console.log(`\t challenges manquants: ${challengeManq}`);
     }
 }   
-afficherTableauDeBord();
+function trierParOrderAlphabetique(){
+    let arr = [];
+    arr = apprenants;
+    arr.sort((a, b) => a.nomComplet.localeCompare(b.nomComplet));
+    return arr;
+}
+function consulterUnApprenant(){
+    let id;
+    let isfound
+    do{ //maybe i should add an option to give up and leave the program(press 0 for example)
+        id = prompt("id de l'apprenant: ");
+        isfound = rechercherApprenant(id);
+        //we have this condition for index 0 since the value 0 is considered falsy in js
+        if(isfound == 0){
+            break;
+        }
+    }while(!isfound);
+    console.log(`ville: ${apprenants[isfound].ville}`);
+    let prog = calculerProgression(id)[0]
+    console.log(`progression: ${prog}%`);
+    let jourExist = [];
+    for(let i = 0; i<7; i++){
+        if(apprenants[isfound].resultats[i]){
+            jourExist.push(apprenants[isfound].resultats[i].jour)
+        }
+    } 
+    jourExist = jourExist.join(", ")
+    console.log(`journées renseignées: ${jourExist}`);
+    for(let i = 0; i<apprenants[isfound].resultats.length; i++){
+        console.log(`     jour: ${apprenants[isfound].resultats[i].jour}: `);
+        console.log(`\tExercices: ${apprenants[isfound].resultats[i].exercicesTermines}/${apprenants[isfound].resultats[i].totalExercices}: `);
+        if(apprenants[isfound].resultats[i].challengeTermine){
+            console.log("\tChallenge: Terminé")
+        }
+        else{
+            console.log("\tChallenge: Non Terminé");
+        }
+    }
+}
+consulterUnApprenant();

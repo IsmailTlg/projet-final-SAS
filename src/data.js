@@ -7,7 +7,12 @@ const apprenants = [
             { jour: 1, exercicesTermines: 18,
             totalExercices: 20, challengeTermine: true },
             { jour: 2, exercicesTermines: 14,
+            totalExercices: 20, challengeTermine: false },
+            { jour: 5, exercicesTermines: 14,
+            totalExercices: 20, challengeTermine: true },
+            { jour: 7, exercicesTermines: 14,
             totalExercices: 20, challengeTermine: false }
+            
         ]
     },
     {
