@@ -1,8 +1,6 @@
 const apprenants = require("./data.js"); //to import the array from data file
 const prompt = require('prompt-sync')(); //to enable input from the user
 function ajouterApprenant(){
-    //develop the UI in console!
-    //new bug, null can be added(if u ctrl + c in input or press enter)
     let newApparenant = {} ;
     //maybe we can make a better id system.
     newApparenant.id = apprenants.length + 1;
@@ -19,7 +17,6 @@ function ajouterApprenant(){
     apprenants.push(newApparenant);
     //fix grammar
     console.log(`${newApparenant.nomComplet} a ete ajoute!`);
-    //needs error handling in case we have a bad entry!
 }
 function enregistrerResultat(){
     //declaring the variables we'll need in the function
@@ -30,7 +27,6 @@ function enregistrerResultat(){
     let challenge; 
     let jour;
     //searching if the learner exists
-    //rechercher Apprenant returns a boolean value
     isfound = rechercherApprenant(idChercher);
     //i could try to simplify this part
     if(isfound != -1){
@@ -114,7 +110,6 @@ function normaliserNom(nom){
     nom = nom.replace(/\s+/g, " ");
     return nom;
 }
-//MUST FIX THE ENTRY HAS TO BE NUMBER IN CHOIX = FALSE!!!!!!!!
 function validerResultat(question, min = 1, max = 1, choix = false){
     let valeur = prompt(question);
     if(choix){
@@ -258,7 +253,7 @@ function afficherTableauDeBord(){
     let sorted = trierParProgression();
     let order = 1;
     for(let i = sorted.length-1; i>=0; i--){
-        console.log(`${order}. ${sorted[i][0].nomComplet}      : ${sorted[i][1]}%`)
+        console.log(`${order}. ${sorted[i][0].nomComplet}\t\t: ${sorted[i][1]}`)
         order++;
     }
     console.log("---------------Données manquantes---------------");
