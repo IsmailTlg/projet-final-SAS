@@ -293,4 +293,15 @@ function consulterUnApprenant(){
         }
     }
 }
-consulterUnApprenant();
+function afficherListDesApprenants(){
+    console.log("====================LISTE DES APPRENANTS====================");
+    console.log("  ID   Nom Complet              Ville           Progression")
+    console.log("------------------------------------------------------------")
+    for(let i = 0; i<apprenants.length; i++){
+        let prog = calculerProgression(apprenants[i].id)[0];
+        console.log(`  ${apprenants[i].id}\t${apprenants[i].nomComplet}\t\t${apprenants[i].ville}\t\t${prog}%`)
+    }
+    console.log("   ---------------------------------")
+    console.log(`   => total d'apprenants: ${apprenants.length}`)
+}
+afficherListDesApprenants()
