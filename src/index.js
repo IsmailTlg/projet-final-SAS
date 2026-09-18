@@ -40,7 +40,6 @@ while(choix != 0){
         console.clear();
         afficherTableauDeBord();
         next();
-        choix = null;
         break;
     case '2':
         console.clear();
@@ -78,22 +77,36 @@ while(choix != 0){
     2. En Progression
     3. A renforcer`)
         let niveau = prompt("niveau: ");
-        console.log(filtrerParNiveau(niveau));
+        let arrr = filtrerParNiveau(niveau);
+        for(let i = 0; i<arrr.length; i++){
+            console.log(arrr[i].nomComplet)
+        }
         next()
         break;
     case '8':
         console.clear();
-        console.log(trierParProgression());
+        let arr = trierParProgression();
+        for(let i=0; i<arr.length; i++){
+            console.log(`${arr[i][0].nomComplet}:\t\t${arr[i][1]}`)
+        }
         next();
         break;
     case '9':
         console.clear()
-        console.log(trierParOrderAlphabetique())
+        let tab = trierParOrderAlphabetique();
+        for(let i = 0; i<tab.length; i++){
+            console.log(tab[i].nomComplet)
+        }
         next()
         break;
     case '0':
         console.clear()
         console.log("Au revoir!");
+        break;
+    default: 
+        console.clear();
+        console.log("choix entre 1 et 9, 0 pour quitter")
+        next();
         break;
     }
 }
