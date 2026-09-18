@@ -148,8 +148,7 @@ function filtrerParNiveau(niveau){
     //let niveau = prompt("entrez niveau: ");
     let valeur;
     let arr = [];
-    niveau = normaliserNom(niveau);
-    if(niveau == "solide"){
+    if(niveau == "1"){
         for(let i = 0; i<apprenants.length; i++){
             valeur = calculerProgression(apprenants[i].id);
             if(valeur[0] >= 80){
@@ -157,7 +156,7 @@ function filtrerParNiveau(niveau){
             }
         }
     }
-    else if(niveau == "en progression"){
+    else if(niveau == "2"){
         for(let i = 0; i<apprenants.length; i++){
             valeur = calculerProgression(apprenants[i].id);
             if(valeur[0] >= 50 && valeur[0] < 80){
@@ -165,7 +164,7 @@ function filtrerParNiveau(niveau){
             }
         }
     }
-    else if(niveau == "a renforcer"){
+    else if(niveau == "3"){
         for(let i = 0; i<apprenants.length; i++){
             valeur = calculerProgression(apprenants[i].id);
             if(valeur[0] < 50){
@@ -304,4 +303,16 @@ function afficherListDesApprenants(){
     console.log("   ---------------------------------")
     console.log(`   => total d'apprenants: ${apprenants.length}`)
 }
-afficherListDesApprenants()
+module.exports = {
+    ajouterApprenant,
+    enregistrerResultat,
+    calculerProgression,
+    rechercherApprenant,
+    filtrerParNiveau,
+    trierParProgression,
+    afficherTableauDeBord,
+    afficherListDesApprenants,
+    consulterUnApprenant,
+    trierParOrderAlphabetique
+};
+filtrerParNiveau("1");
