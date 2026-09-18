@@ -6,15 +6,19 @@ function ajouterApprenant(){
     let newApparenant = {} ;
     //maybe we can make a better id system.
     newApparenant.id = apprenants.length + 1;
-    newApparenant.nomComplete = prompt("Entrez nom complet de l'apprenant: ");
-    newApparenant.nomComplete = normaliserNom(newApparenant.nomComplete);
+    newApparenant.nomComplet = prompt("Entrez nom complet de l'apprenant: ");
+    if(newApparenant.nomComplet == null){
+        console.log("enter a valide name!")
+        return 0;
+    }
+    newApparenant.nomComplet = normaliserNom(newApparenant.nomComplet);
     //do i have to use normaliserNom on the city too ? 
     newApparenant.ville = prompt("Entrez la ville de l'apprenant: ");
     //do i have to leave the resultats empty?
     newApparenant.resultats = [];
     apprenants.push(newApparenant);
     //fix grammar
-    console.log(`${newApparenant.nomComplete} a ete ajoute!`);
+    console.log(`${newApparenant.nomComplet} a ete ajoute!`);
     //needs error handling in case we have a bad entry!
 }
 function enregistrerResultat(){
@@ -29,7 +33,7 @@ function enregistrerResultat(){
     //rechercher Apprenant returns a boolean value
     isfound = rechercherApprenant(idChercher);
     //i could try to simplify this part
-    if(isfound){
+    if(isfound != -1){
         //validerResultat really simplified this part of code, can i make it work with challenges too ?
         jour = validerResultat("jour (1 à 7): ", 1, 7);
         totalProposer = validerResultat("Total d'exercices proposés :", 0, 20);
@@ -46,10 +50,27 @@ function enregistrerResultat(){
     //data treatement to output.
     
     const index = apprenants.findIndex(apprenant => apprenant.id == idChercher)
-    apprenants[index].resultats.push({
-        jour: jour, exercicesTermines: exercices, 
-        totalExercices: totalProposer, challengeTermine: challenge
-    })
+    //to update a result
+    let updated = false;
+    for(let i = 0; i<apprenants[index].resultats.length; i++){
+        if(apprenants[index].resultats[i]){
+            if(apprenants[index].resultats[i].jour == jour){
+                apprenants[index].resultats[i] = {
+                jour: jour, exercicesTermines: exercices, 
+                totalExercices: totalProposer, challengeTermine: challenge
+                }
+                updated = true;
+            }
+
+        }
+    }
+    //to add a result
+    if(!updated){
+        apprenants[index].resultats.push({
+            jour: jour, exercicesTermines: exercices, 
+            totalExercices: totalProposer, challengeTermine: challenge
+        })
+    }
     console.log(`Résultat du jour ${jour} enregistré.`);
     //adding calculerProgression simplified this function way better.
     let prog = calculerProgression(idChercher);
@@ -61,6 +82,10 @@ function enregistrerResultat(){
 function calculerProgression(id){
     //get the index in the array of the desired id
     const index = apprenants.findIndex(apprenant => apprenant.id == id)
+    if(index == -1){
+        console.log(`Apprenants pas trouve`)
+        return 0;
+    }
     let totalTerminer = 0;
     let totalExercices = 0;
     let challengeTerminer = 0;
@@ -74,6 +99,9 @@ function calculerProgression(id){
         } 
     }
     let progression = (totalTerminer/totalExercices)*100;
+    if(isNaN(progression)){
+        return "0";
+    }
     //output
     prog = [progression, totalExercices, totalTerminer, challengeTerminer];
     //returning a whole array is way better so we can take whatever we need.
@@ -97,11 +125,11 @@ function validerResultat(question, min = 1, max = 1, choix = false){
         }
         return valeur;
     }
-    while(valeur < min || valeur > max){
+    valeur = Number(valeur);
+    while(valeur < min || valeur > max || isNaN(valeur)){
         console.log(`valeur invalide!, (entre ${min} et ${max})`);
         valeur = prompt(question);
     }
-    valeur = Number(valeur);
     return valeur;
 }
 function rechercherApprenant(cherche){
@@ -115,13 +143,14 @@ function rechercherApprenant(cherche){
                 isfound = true;
                 //bug here, when i add result for a new added person the name appears undefined after search!
                 console.log(`Apprenant trouve: ${apprenants[i].nomComplet}`);
-                const index = apprenants.findIndex(apprenant => apprenant.id == cherche)
-                return index;
+                // const index = apprenants.findIndex(apprenant => apprenant.id == cherche)
+                // return index;
+                return i;
             }
         }
         if(!isfound){
             console.log("apprenant pas trouve");
-            return false;
+            return -1;
         }
     }
     //case cherche is a string(name)
@@ -133,13 +162,12 @@ function rechercherApprenant(cherche){
                 console.log(`apprenant trouve: ${apprenants[i].nomComplet}`);
                 isfound = true;
                 //i can make it return the id's index, which would be a truthy value as well
-                const index = apprenants.findIndex(apprenant => apprenant.id == cherche)
-                return index;
+                return i;
             }
         }
         if(!isfound){
             console.log("apprenant pas trouve.");
-            return false;
+            return -1;
         }
     }
 }
@@ -213,12 +241,12 @@ function afficherTableauDeBord(){
         progressionMoyenne += calculerProgression(apprenants[i].id)[0]
     }
     progressionMoyenne /= apprenants.length
-    let nbrSolides = filtrerParNiveau("solide").length
-    let nbrEnProg = filtrerParNiveau("en progression").length
-    let nbrRenfroc = filtrerParNiveau("a renforcer").length
+    let nbrSolides = filtrerParNiveau("1").length
+    let nbrEnProg = filtrerParNiveau("2").length
+    let nbrRenfroc = filtrerParNiveau("3").length
     console.log("====================TABLEAU DE BORD====================");
     console.log(`Apprenants: ${apprenants.length}`);
-    console.log(`Progression Moyenne: ${progressionMoyenne}`);
+    console.log(`Progression Moyenne: ${progressionMoyenne}%`);
     console.log("---------------------LES NIVEAU------------------------")
     console.log(`Apprenants Solide: ${nbrSolides}`);
     console.log(`Apprenants en progression: ${nbrEnProg}`);
@@ -226,7 +254,7 @@ function afficherTableauDeBord(){
     console.log("--------------------PROGRESSION--------------------");
     let sorted = trierParProgression();
     for(let i = 0; i<sorted.length; i++){
-        console.log(`${i+1}. ${sorted[i][0].nomComplet}      : ${sorted[i][1]}`)
+        console.log(`${i+1}. ${sorted[i][0].nomComplet}      : ${sorted[i][1]}%`)
     }
     console.log("---------------Données manquantes---------------");
     for(let i = 0; i<apprenants.length; i++){
@@ -255,7 +283,7 @@ function afficherTableauDeBord(){
 }   
 function trierParOrderAlphabetique(){
     let arr = [];
-    arr = apprenants;
+    arr = [...apprenants];
     arr.sort((a, b) => a.nomComplet.localeCompare(b.nomComplet));
     return arr;
 }
@@ -315,4 +343,3 @@ module.exports = {
     consulterUnApprenant,
     trierParOrderAlphabetique
 };
-filtrerParNiveau("1");
